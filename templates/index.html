@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- TOP HEADER AREA -->
+<header class="page-header" style="background-image: url('{{ url_for('static', filename='images/header_bg.png') }}');">
+  <div class="header-bg-overlay"></div>
+  
+  <div class="header-left">
+    <h1 class="header-title">Anu’s Space</h1>
+    <p class="header-tagline">A little space for myself.</p>
+  </div>
+  
+  <div class="header-right">
+    <p class="header-script-quote">Good things<br>take time.</p>
+  </div>
+</header>
+
+<!-- MAIN FEATURE CARDS CONTAINER -->
+<section class="cards-container">
+  
+  <!-- LEFT CARD — MY DIARY -->
+  <div class="feature-card card-diary" style="background-image: url('{{ url_for('static', filename='images/diary_bg.png') }}');">
+    <div class="card-overlay"></div>
+    <div class="card-content">
+      
+      <div class="card-top-bar">
+        <div class="card-icon-badge">
+          <!-- Lock Icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <span class="card-top-tag">Private &bull; Secure &bull; Always yours</span>
+      </div>
+      
+      <div class="card-main-body">
+        <h2 class="card-heading">My Diary</h2>
+        <p class="card-subtitle">Write it down. Leave it here.</p>
+        <p class="card-info-text">Your thoughts, your space.</p>
+      </div>
+      
+      <a href="{{ url_for('diary_list') }}" class="card-btn btn-diary">
+        Open Diary &nbsp;&rarr;
+      </a>
+      
+    </div>
+  </div>
+
+  <!-- RIGHT CARD — MY FOCUS -->
+  <div class="feature-card card-focus" style="background-image: url('{{ url_for('static', filename='images/focus_bg.png') }}');">
+    <div class="card-overlay"></div>
+    <div class="card-content">
+      
+      <div class="card-top-bar">
+        <div class="card-icon-badge">
+          <!-- Code / Laptop Icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="2" y1="20" x2="22" y2="20"></line>
+          </svg>
+        </div>
+        <span class="card-top-tag">Discipline &bull; Progress &bull; A better you</span>
+      </div>
+      
+      <div class="card-main-body">
+        <h2 class="card-heading">My Focus</h2>
+        <p class="card-subtitle">Keep showing up.</p>
+        
+        <div class="focus-meta-group">
+          <span class="focus-goal-label">Today's coding goal</span>
+          <span class="focus-goal-value">{{ target }} {{ focus.platform }} problems</span>
+          <div class="focus-reminder-badge">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>Reminder &bull; {{ reminder.time_str }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <a href="{{ url_for('focus_page') }}" class="card-btn btn-focus">
+        Start Coding &nbsp;&rarr;
+      </a>
+      
+    </div>
+  </div>
+
+</section>
+
+<!-- TODAY SECTION PANEL -->
+<section class="today-panel">
+  
+  <div class="today-header">
+    <div class="today-header-left">
+      <!-- Calendar Icon -->
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#685482" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      <h3 class="today-title">Today</h3>
+      <div class="today-divider"></div>
+      <span class="today-date">{{ today_date_str }}</span>
+    </div>
+    
+    <div class="today-header-right">
+      <span>Small steps. Big progress.</span>
+    </div>
+  </div>
+
+  <div class="today-body-grid">
+    
+    <!-- Left Progress Counter & Bar -->
+    <div class="progress-container">
+      <span class="progress-label">Coding progress</span>
+      <div class="progress-counter" id="progressCounterText">{{ completed }} / {{ target }} problems</div>
+      
+      <div class="progress-bar-row">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressBarFill" style="width: {{ percent }}%;"></div>
+        </div>
+        <span class="progress-percentage" id="progressPercentageText">{{ percent }}%</span>
+      </div>
+    </div>
+    
+    <!-- Right Side Quote Card -->
+    <div class="today-quote-card">
+      <div class="quote-accent-bar"></div>
+      <p class="quote-card-text">“You don’t have to be perfect,<br>just consistent.”</p>
+    </div>
+
+  </div>
+
+  <!-- Bottom Footer Quote -->
+  <div class="today-footer">
+    <span class="today-footer-text">one thing at a time.</span>
+  </div>
+
+</section>
+{% endblock %}

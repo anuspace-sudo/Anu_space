@@ -1,0 +1,17 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# SQLite Database (contains private diary entries and local secrets)
+*.db
+database.db
+
+# Environment variables and secrets
+.env
+instance/
+
+# Virtual environments
+venv/
+.venv/
+env/

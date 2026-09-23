@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="subpage-container">
+  
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <h2 class="subpage-title">My Diary</h2>
+      <p class="subpage-subtitle" style="margin-bottom: 0;">Write it down. Leave it here. Private & secure.</p>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <a href="{{ url_for('diary_new') }}" class="form-btn btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        New Entry
+      </a>
+      <a href="{{ url_for('diary_lock') }}" class="form-btn" style="background: #EFEAF5; color: #5B487A; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        Lock Diary
+      </a>
+    </div>
+  </div>
+
+  <!-- SEARCH BAR -->
+  <form method="GET" action="{{ url_for('diary_list') }}" style="margin-bottom: 28px;">
+    <div style="display: flex; gap: 12px;">
+      <input type="text" name="q" value="{{ search_q }}" class="form-input" placeholder="Search entries by keyword or title..." style="flex: 1;">
+      <button type="submit" class="form-btn btn-primary">Search</button>
+      {% if search_q %}
+        <a href="{{ url_for('diary_list') }}" class="form-btn" style="background: #ECE7DF; color: #555; text-decoration: none;">Clear</a>
+      {% endif %}
+    </div>
+  </form>
+
+  <!-- ENTRIES LISTING -->
+  {% if entries %}
+    <div style="display: flex; flex-direction: column; gap: 18px;">
+      {% for entry in entries %}
+        <div style="background: #FAF8F5; border: 1px solid #EBE4D8; border-radius: 16px; padding: 22px 26px; transition: border 0.2s ease;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+            <h3 style="font-family: var(--font-serif); font-size: 22px; font-weight: 700; color: #2C2638;">{{ entry.title }}</h3>
+            <span style="font-size: 13px; color: #888194; font-weight: 500;">{{ entry.entry_date }}</span>
+          </div>
+          
+          <p style="font-size: 14.5px; color: #4A4456; line-height: 1.6; white-space: pre-wrap; margin-bottom: 16px;">{{ entry.content }}</p>
+          
+          <div style="display: flex; align-items: center; gap: 14px; border-top: 1px solid #EFEAE2; padding-top: 12px;">
+            <a href="{{ url_for('diary_edit', entry_id=entry.id) }}" style="font-size: 13.5px; color: #6D549E; text-decoration: none; font-weight: 600;">Edit</a>
+            <form method="POST" action="{{ url_for('diary_delete', entry_id=entry.id) }}" onsubmit="return confirm('Delete this diary entry?');" style="display: inline;">
+              <button type="submit" style="background: none; border: none; font-size: 13.5px; color: #B04242; font-weight: 600; cursor: pointer; padding: 0;">Delete</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div style="text-align: center; padding: 48px 20px; background: #FAF8F5; border-radius: 16px; border: 1px dashed #E0D7C8;">
+      <p style="font-family: var(--font-serif); font-size: 20px; color: #6C6479; margin-bottom: 8px;">No diary entries found.</p>
+      <p style="font-size: 14px; color: #938B9E; margin-bottom: 18px;">Write down your thoughts and keep them safe in your personal space.</p>
+      <a href="{{ url_for('diary_new') }}" class="form-btn btn-primary" style="text-decoration: none;">Write First Entry</a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

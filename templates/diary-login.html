@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 40px auto;">
+  <div class="subpage-container" style="text-align: center;">
+    
+    <div style="width: 56px; height: 56px; border-radius: 16px; background: #F3ECFA; color: #5D4780; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    </div>
+
+    <h2 class="subpage-title">
+      {% if is_first_time %}Set Up Diary Password{% else %}Unlock My Diary{% endif %}
+    </h2>
+    <p class="subpage-subtitle">
+      {% if is_first_time %}
+        Create a master password to protect your private journal.
+      {% else %}
+        Enter your password to access your private entries.
+      {% endif %}
+    </p>
+
+    {% if error %}
+      <div class="alert-box alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('diary_login') }}">
+      <div class="form-group" style="text-align: left;">
+        <label class="form-label" for="password">Master Password</label>
+        <input type="password" id="password" name="password" class="form-input" placeholder="Enter password..." required autofocus>
+      </div>
+
+      {% if is_first_time %}
+      <div class="form-group" style="text-align: left;">
+        <label class="form-label" for="confirm_password">Confirm Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" class="form-input" placeholder="Confirm password..." required>
+      </div>
+      {% endif %}
+
+      <button type="submit" class="form-btn btn-primary" style="width: 100%; margin-top: 10px;">
+        {% if is_first_time %}Create & Unlock Diary{% else %}Unlock Diary{% endif %}
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

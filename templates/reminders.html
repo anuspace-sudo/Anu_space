@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="subpage-container">
+  
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+    <div>
+      <h2 class="subpage-title">Coding Practice Reminders</h2>
+      <p class="subpage-subtitle" style="margin-bottom: 0;">Set gentle reminders to keep your coding streak active.</p>
+    </div>
+  </div>
+
+  <!-- ADD REMINDER FORM -->
+  <div style="background: #FAF8F5; border: 1px solid #EBE4D8; border-radius: 18px; padding: 24px 28px; margin-bottom: 32px;">
+    <h3 style="font-family: var(--font-serif); font-size: 20px; font-weight: 700; color: #2C2638; margin-bottom: 16px;">Add New Reminder</h3>
+    
+    <form method="POST" action="{{ url_for('reminders_page') }}">
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+        
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Platform</label>
+          <select name="platform" class="form-select">
+            <option value="NeetCode" selected>NeetCode</option>
+            <option value="LeetCode">LeetCode</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Daily Target</label>
+          <input type="number" name="target_count" value="2" min="1" max="20" class="form-input">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Reminder Time</label>
+          <input type="text" name="time_str" value="7:30 PM" class="form-input" placeholder="e.g., 7:30 PM">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Frequency</label>
+          <select name="frequency" class="form-select">
+            <option value="Every day">Every day</option>
+            <option value="Weekdays">Weekdays</option>
+            <option value="Weekends">Weekends</option>
+          </select>
+        </div>
+
+      </div>
+
+      <button type="submit" class="form-btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        Save Reminder
+      </button>
+    </form>
+  </div>
+
+  <!-- REMINDERS LIST -->
+  <div>
+    <h3 style="font-family: var(--font-serif); font-size: 22px; font-weight: 700; color: #2C2638; margin-bottom: 16px;">Scheduled Reminders</h3>
+    
+    {% if reminders %}
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        {% for r in reminders %}
+          <div style="background: #FFFFFF; border: 1px solid #ECE7DE; border-radius: 16px; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between;">
+            
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <div style="width: 42px; height: 42px; border-radius: 12px; background: #F2EEFA; color: #5B487A; display: flex; align-items: center; justify-content: center;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              </div>
+              
+              <div>
+                <h4 style="font-family: var(--font-serif); font-size: 19px; font-weight: 700; color: #221D2E;">
+                  {{ r.platform }} &bull; {{ r.target_count }} problems
+                </h4>
+                <p style="font-size: 13.5px; color: #726A80; margin-top: 2px;">
+                  Time: <strong>{{ r.time_str }}</strong> &bull; Frequency: {{ r.frequency }}
+                </p>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <form method="POST" action="{{ url_for('reminder_toggle', rem_id=r.id) }}">
+                <button type="submit" class="form-btn" style="padding: 8px 16px; font-size: 13px; 
+                  {% if r.is_active == 1 %}background: #EAF6ED; color: #166534;{% else %}background: #F3F3F3; color: #777;{% endif %}">
+                  {% if r.is_active == 1 %}Active{% else %}Paused{% endif %}
+                </button>
+              </form>
+
+              <form method="POST" action="{{ url_for('reminder_delete', rem_id=r.id) }}" onsubmit="return confirm('Delete this reminder?');">
+                <button type="submit" style="background: none; border: none; font-size: 13.5px; color: #B04242; cursor: pointer; padding: 4px 8px;">Delete</button>
+              </form>
+            </div>
+
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="font-size: 14px; color: #847C94;">No reminders created yet.</p>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="subpage-container">
+  
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <h2 class="subpage-title">My Focus — Coding Tracker</h2>
+      <p class="subpage-subtitle" style="margin-bottom: 0;">Keep showing up. Discipline &bull; Progress &bull; A better you.</p>
+    </div>
+  </div>
+
+  <!-- TARGET & PROGRESS SUMMARY CARD -->
+  <div style="background: linear-gradient(135deg, #F0F5FD, #F8FAFD); border: 1px solid #D5E2F0; border-radius: 18px; padding: 24px 28px; margin-bottom: 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+    
+    <div>
+      <span style="font-size: 12px; font-weight: 700; color: #5B728C; text-transform: uppercase; letter-spacing: 0.6px;">Today's Target</span>
+      <h3 style="font-family: var(--font-serif); font-size: 32px; font-weight: 700; color: #1E2E42; margin-top: 4px;">{{ completed }} / {{ target }} {{ focus.platform }} problems</h3>
+      <p style="font-size: 13.5px; color: #64778D; margin-top: 4px;">Progress: {{ percent }}% completed today</p>
+    </div>
+
+    <!-- UPDATE GOAL FORM -->
+    <form method="POST" action="{{ url_for('focus_page') }}" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <input type="hidden" name="action" value="update_goal">
+      
+      <div>
+        <label class="form-label" style="font-size: 12px;">Platform</label>
+        <select name="platform" class="form-select" style="padding: 8px 12px;">
+          <option value="NeetCode" {% if focus.platform == 'NeetCode' %}selected{% endif %}>NeetCode</option>
+          <option value="LeetCode" {% if focus.platform == 'LeetCode' %}selected{% endif %}>LeetCode</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="form-label" style="font-size: 12px;">Target</label>
+        <input type="number" name="target_count" value="{{ target }}" min="1" max="20" class="form-input" style="width: 80px; padding: 8px 12px;">
+      </div>
+
+      <button type="submit" class="form-btn btn-focus" style="margin-top: 18px; padding: 10px 18px;">Set Goal</button>
+    </form>
+
+  </div>
+
+  <!-- LOG PROBLEM FORM -->
+  <div style="background: #FAF8F5; border: 1px solid #EBE4D8; border-radius: 18px; padding: 24px 28px; margin-bottom: 32px;">
+    <h3 style="font-family: var(--font-serif); font-size: 22px; font-weight: 700; color: #2C2638; margin-bottom: 16px;">Log Completed Problem</h3>
+    
+    <form method="POST" action="{{ url_for('focus_page') }}">
+      <input type="hidden" name="action" value="log_problem">
+      
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Problem Title / Name</label>
+          <input type="text" name="problem_title" class="form-input" placeholder="e.g., Two Sum, Valid Anagram..." required>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Difficulty</label>
+          <select name="difficulty" class="form-select">
+            <option value="Easy">Easy</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Notes / Approach Key Takeaways (Optional)</label>
+        <input type="text" name="notes" class="form-input" placeholder="e.g. Used Hash Map O(n) time, sliding window approach...">
+      </div>
+
+      <button type="submit" class="form-btn btn-focus" style="display: inline-flex; align-items: center; gap: 8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Log Problem Completed
+      </button>
+    </form>
+  </div>
+
+  <!-- TODAY'S LOGGED PROBLEMS -->
+  <div>
+    <h3 style="font-family: var(--font-serif); font-size: 22px; font-weight: 700; color: #2C2638; margin-bottom: 16px;">Today's Solved Problems</h3>
+    
+    {% if logs %}
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        {% for log in logs %}
+          <div style="background: #FFFFFF; border: 1px solid #ECE7DE; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-weight: 700; font-size: 16px; color: #223246;">{{ log.problem_title }}</span>
+                <span style="font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px; 
+                  {% if log.difficulty == 'Easy' %}background: #E6F4EA; color: #137333;
+                  {% elif log.difficulty == 'Medium' %}background: #FEF7E0; color: #B06000;
+                  {% else %}background: #FCE8E6; color: #C5221F;{% endif %}">
+                  {{ log.difficulty }}
+                </span>
+                <span style="font-size: 12px; color: #78879B;">({{ log.platform }})</span>
+              </div>
+              {% if log.notes %}
+                <p style="font-size: 13.5px; color: #5C6A7B; margin-top: 4px;">{{ log.notes }}</p>
+              {% endif %}
+            </div>
+            <span style="font-size: 12px; color: #9AA7B6;">Logged today</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="font-size: 14px; color: #8493A5; font-style: italic;">No problems logged yet today. Click above to log your progress!</p>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
