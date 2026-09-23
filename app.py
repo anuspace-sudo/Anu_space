@@ -10,7 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'anu_space_private_secret_key_998877')
 
-DATABASE = os.path.join(app.root_path, 'database.db')
+DATABASE = os.path.join('/tmp', 'anu_space.db')
 
 def get_db():
     db = sqlite3.connect(DATABASE)
